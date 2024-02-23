@@ -1,13 +1,16 @@
-import time
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from configparser import ConfigParser
 
 
 config = ConfigParser()
-config.read('config.ini')
+# config.read('config.ini')
+config.read('C:/Users/Shala/OneDrive/Рабочий стол/Professional Python/py-homeworks-advanced/4.Tests/src/config.ini')
 
 
 def get_yandex_token():
@@ -28,22 +31,18 @@ class AuthYandex:
 
     def authorize_yandex(self):
         browser.get('https://passport.yandex.ru/auth/welcome')
-        time.sleep(2)
 
-        email_input = browser.find_element(by='id', value='passp-field-login')
+        email_input = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, 'passp-field-login')))
         email_input.clear()
         email_input.send_keys(self.login)
-        time.sleep(2)
         email_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
-        password_input = browser.find_element(by='id', value='passp-field-passwd')
+        password_input = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, 'passp-field-passwd')))
         password_input.send_keys(self.password)
-        time.sleep(2)
         password_input.send_keys(Keys.ENTER)
-        time.sleep(3)
 
-        return browser.find_element(by='class', value='Card_label__AG2MY')
+        WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'Card_label__AG2MY')))
+        return browser.find_element(By.CLASS_NAME, 'Card_label__AG2MY')
 
 
 if __name__ == '__main__':
@@ -51,5 +50,5 @@ if __name__ == '__main__':
     auth_y = AuthYandex(my_yandex_login, my_yandex_password)
     auth_y.authorize_yandex()
 
-    browser.close()
-    browser.quit()
+browser.close()
+browser.quit()

@@ -1,43 +1,52 @@
 import requests
 from configparser import ConfigParser
+import logging
+
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 config = ConfigParser()
-config.read('config.ini')
+# config.read('config.ini')
+config.read('C:/Users/Shala/OneDrive/Рабочий стол/Professional Python/py-homeworks-advanced/4.Tests/src/config.ini')
+
+# def get_yandex_token():
+#     my_yandex_token = config['YANDEX']['token']
+#     return my_yandex_token
 
 
 def get_yandex_token():
-    my_yandex_token = config['YANDEX']['token']
+    print(config.sections())  # Печать всех секций
+    print(config.items('YANDEX'))  # Печать всех элементов 'YANDEX'
+    my_yandex_token = config.get('YANDEX', 'token')
     return my_yandex_token
 
 
-class YandexDisc:
-    def __init__(self, folder_name, my_yandex_token):
-        self.token = my_yandex_token
-        self.name = folder_name
-        self.url = 'https://cloud-api.yandex.net/v1/disk/resources'
-        self.headers = {
-            'Authorization': f'Oauth {self.token}',
-            'Content-Type': 'application/json',
-        }
+URL = 'https://cloud-api.yandex.net/v1/disk/resources'
 
-    def create_folder(self, folder_name):
-        """
-        Метод для создания папки на Яндекс диске
-        """
-        params = {'path': folder_name}
-        response = requests.put(self.url, headers=self.headers, params=params)
-        if response.status_code == 201:  # Created
-            print(f'\nПапка {folder_name} успешно создана на вашем Яндекс диске!\n')
-        elif response.status_code == 409:  # Conflict
-            print(f'\nПапка {folder_name} уже существует на вашем Яндекс диске!\n')
-        else:
-            print(f'\nОшибка {response.status_code} - {response.text}\n')
 
-        return folder_name
+def create_folder(folder_name, token):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'OAuth {token}',
+    }
+    response = requests.put(f'{URL}?path={folder_name}', headers=headers)
+    logging.info(f'Folder creation response: {response.text}')
+    return response
+
+
+def get_folder_info(folder_name, token):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'OAuth {token}',
+    }
+    result = requests.get(f'{URL}?path={folder_name}', headers=headers)
+    logging.info(f'Folder info response: {result.text}')
+    return result
 
 
 if __name__ == '__main__':
     my_token = get_yandex_token()
-    my_yandex = YandexDisc('test_dir', my_token)
-    my_yandex.create_folder('test_dir')
+    logging.info('Creating a new folder on Yandex.Disk')
+    create_folder('test_dir', my_token)
+    get_folder_info('test_dir', my_token)
