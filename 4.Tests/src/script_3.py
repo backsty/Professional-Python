@@ -9,8 +9,7 @@ from configparser import ConfigParser
 
 
 config = ConfigParser()
-# config.read('config.ini')
-config.read('C:/Users/Shala/OneDrive/Рабочий стол/Professional Python/py-homeworks-advanced/4.Tests/src/config.ini')
+config.read('C:/Users/Shala/OneDrive/Рабочий стол/Professional Python/py-homeworks-advanced/4.Tests/config.ini')
 
 
 def get_yandex_token():

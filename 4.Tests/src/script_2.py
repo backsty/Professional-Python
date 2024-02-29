@@ -7,19 +7,12 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 
 
 config = ConfigParser()
-# config.read('config.ini')
-config.read('C:/Users/Shala/OneDrive/Рабочий стол/Professional Python/py-homeworks-advanced/4.Tests/src/config.ini')
-
-# def get_yandex_token():
-#     my_yandex_token = config['YANDEX']['token']
-#     return my_yandex_token
+config.read('C:/Users/Shala/OneDrive/Рабочий стол/Professional Python/py-homeworks-advanced/4.Tests/config.ini')
 
 
 def get_yandex_token():
-    print(config.sections())  # Печать всех секций
-    print(config.items('YANDEX'))  # Печать всех элементов 'YANDEX'
-    my_yandex_token = config.get('YANDEX', 'token')
-    return my_yandex_token
+    my_token_ = config['YANDEX']['token']
+    return my_token_
 
 
 URL = 'https://cloud-api.yandex.net/v1/disk/resources'
